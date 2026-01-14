@@ -1,0 +1,37 @@
+ComfyUI Deterministic Nodes
+Copyright (C) 2025 Joseph Ibrahim <joseph@josephibrahim.com>
+
+DUAL-LICENSE NOTICE
+===================
+
+This software is dual-licensed:
+
+1. GNU Affero General Public License v3.0 (AGPL-3.0)
+   - See LICENSE file for full terms
+   - Free for open source use with copyleft requirements
+   - Network use triggers source disclosure requirements
+
+2. Commercial License
+   - See COMMERCIAL_LICENSE.md for terms and pricing
+   - Available for proprietary/SaaS use without AGPL obligations
+   - Contact: joseph@josephibrahim.com
+
+INTELLECTUAL PROPERTY
+=====================
+
+This software contains original implementations of:
+
+- Batch-Invariant Inference: Per-item RNG reset methodology for guaranteed reproducibility
+- Deterministic MoE Routing: Hash-based expert selection eliminating MCMC variance
+- ECHO Context Integration: 4-tier hierarchical memory retrieval patterns
+- Cascade Refinement: Sequential multi-stage deterministic processing
+- Checksum Validation: Cryptographic reproducibility proof system
+
+Based on ThinkingMachines research on defeating non-determinism in LLM inference.
+
+ATTRIBUTION
+===========
+
+If you use this software, please cite:
+  Joseph Ibrahim, "ComfyUI Deterministic Nodes", 2025
+  https://github.com/joe002/comfyui-deterministic-nodes

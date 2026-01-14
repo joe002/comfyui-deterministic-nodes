@@ -1,3 +1,22 @@
+# ComfyUI Deterministic Nodes
+# Copyright (C) 2025 Joseph Ibrahim <joseph@josephibrahim.com>
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published
+# by the Free Software Foundation, version 3 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
+#
+# Commercial licensing available: See COMMERCIAL_LICENSE.md
+
 """
 ComfyUI Deterministic Nodes
 ===========================
@@ -65,7 +84,7 @@ class DeterministicSampler:
     RETURN_TYPES = ("LATENT", "STRING")
     RETURN_NAMES = ("latent", "determinism_proof")
     FUNCTION = "sample_deterministic"
-    CATEGORY = "deterministic"
+    CATEGORY = "JI/Reproducible"
 
     def sample_deterministic(
         self,
@@ -207,7 +226,7 @@ class ChecksumValidator:
     RETURN_TYPES = ("STRING", "BOOLEAN", "STRING")
     RETURN_NAMES = ("actual_checksum", "matches", "report")
     FUNCTION = "validate"
-    CATEGORY = "deterministic"
+    CATEGORY = "JI/Reproducible"
 
     def validate(
         self,
@@ -285,7 +304,7 @@ class MoERouterNode:
     RETURN_TYPES = ("MODEL", "INT", "STRING")
     RETURN_NAMES = ("selected_model", "expert_index", "routing_rationale")
     FUNCTION = "route"
-    CATEGORY = "deterministic"
+    CATEGORY = "JI/Reproducible"
 
     def route(
         self,
@@ -368,7 +387,7 @@ class CascadeRefiner:
     RETURN_TYPES = ("LATENT", "STRING")
     RETURN_NAMES = ("latent", "stage_log")
     FUNCTION = "refine"
-    CATEGORY = "deterministic"
+    CATEGORY = "JI/Reproducible"
 
     def refine(
         self,
@@ -450,7 +469,7 @@ class ECHOContextNode:
     RETURN_TYPES = ("STRING", "STRING")
     RETURN_NAMES = ("context", "retrieval_log")
     FUNCTION = "retrieve"
-    CATEGORY = "deterministic"
+    CATEGORY = "JI/Reproducible"
 
     def retrieve(
         self,
@@ -517,11 +536,11 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "DeterministicSampler": "Deterministic Sampler (Batch-Invariant)",
-    "ChecksumValidator": "Checksum Validator (Reproducibility Proof)",
-    "MoERouterNode": "MoE Router (Deterministic Expert Selection)",
-    "CascadeRefiner": "Cascade Refiner (Sequential Stages)",
-    "ECHOContextNode": "ECHO Context (4-Tier Memory)",
+    "DeterministicSampler": "Locked Sampler ⟳",
+    "ChecksumValidator": "Output Matcher",
+    "MoERouterNode": "Expert Selector",
+    "CascadeRefiner": "Multi-Pass Refiner",
+    "ECHOContextNode": "Memory Recall",
 }
 
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]

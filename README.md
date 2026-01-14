@@ -18,38 +18,45 @@ Same seed + Same prompt = Identical output (ALWAYS)
 
 Based on [ThinkingMachines batch-invariant-ops research](https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/).
 
-## Nodes
+## Nodes (all in `JI/Reproducible` category)
 
-### DeterministicSampler
-Batch-invariant sampling with per-item RNG reset.
-- Forces `batch_size=1` internally
-- Resets RNG for each batch item: `seed + i`
-- Disables cuDNN auto-tuning
-- Outputs determinism proof with checksum
+| Display Name | What It Does |
+|--------------|--------------|
+| **Locked Sampler** ⟳ | Same seed = same output, every time |
+| **Output Matcher** | Verify your outputs match exactly |
+| **Expert Selector** | Pick the right AI model for your task |
+| **Multi-Pass Refiner** | Refine in 3 stages (coarse → detail) |
+| **Memory Recall** | Retrieve context from 4-tier memory |
 
-### ChecksumValidator
+### Locked Sampler ⟳
+Guarantees identical outputs with the same seed:
+- Forces `batch_size=1` internally (the secret sauce)
+- Resets RNG for each item
+- Disables GPU auto-tuning variance
+- Outputs proof checksum
+
+### Output Matcher
 Verify reproducibility with configurable tolerance:
 - `exact`: Byte-for-byte match
 - `epsilon_1e-6`: Allow tiny floating-point variance
 - `epsilon_1e-4`: Allow small floating-point variance
 - `structural`: Shape and dtype match only
 
-### MoERouterNode
-Deterministic Mixture-of-Experts routing:
-- Hash-based expert selection (no MCMC variance)
-- Lexicographic tie-breaking
+### Expert Selector
+Pick the right AI model automatically:
+- Hash-based selection (consistent every time)
 - Supports up to 4 expert models
 - Same input = same expert (ALWAYS)
 
-### CascadeRefiner
-Sequential 3-stage refinement (Nemotron-Cascade pattern):
+### Multi-Pass Refiner
+Refine in stages (like render passes):
 - Stage 1: Coarse pass
 - Stage 2: Refinement
 - Stage 3: Detail
 - Different seed per stage for diversity within determinism
 
-### ECHOContextNode
-4-tier context memory retrieval (ECHO 2.0 pattern):
+### Memory Recall
+Retrieve context from 4-tier memory:
 - Hot: GPU VRAM (active)
 - Warm: System RAM (recent)
 - Cold: NVMe (historical)
@@ -69,17 +76,17 @@ Restart ComfyUI.
 ### Reproducibility Workflow
 
 ```
-[Model] --> [DeterministicSampler] --> [ChecksumValidator] --> [Output]
-                   |                            |
-                   +-- seed=42 ----------------+
-                   |                            |
-                   +-- checksum output --------+-- verify on next run
+[Model] --> [Locked Sampler] --> [Output Matcher] --> [Output]
+                   |                      |
+                   +-- seed=42 ----------+
+                   |                      |
+                   +-- checksum ---------+-- verify on next run
 ```
 
 ### Multi-Model Workflow
 
 ```
-[Prompt] --> [MoERouterNode] --> [Selected Model] --> [DeterministicSampler]
+[Prompt] --> [Expert Selector] --> [Selected Model] --> [Locked Sampler]
                   |
                   +-- expert_0: General
                   +-- expert_1: Code
@@ -90,7 +97,7 @@ Restart ComfyUI.
 ### Context-Aware Workflow
 
 ```
-[Query] --> [ECHOContextNode] --> [Prompt with Context] --> [Model]
+[Query] --> [Memory Recall] --> [Prompt with Context] --> [Model]
                   |
                   +-- hot_only: Fast, GPU cache
                   +-- hot_warm: Recent context
@@ -120,14 +127,30 @@ Different batch sizes = different accumulation order = different results.
 ## Framework Integration
 
 These nodes integrate with:
-- **ECHO 2.0**: 4-tier context memory (ECHOContextNode)
-- **CSQMF-R1**: Expert routing (MoERouterNode)
-- **Nemotron**: Cascade refinement (CascadeRefiner)
-- **ThinkingMachines**: Batch-invariant inference (DeterministicSampler)
+- **ECHO 2.0**: 4-tier context memory → Memory Recall
+- **CSQMF-R1**: Expert routing → Expert Selector
+- **Nemotron**: Cascade refinement → Multi-Pass Refiner
+- **ThinkingMachines**: Batch-invariant inference → Locked Sampler
 
 ## License
 
-Apache License 2.0 - See [LICENSE](LICENSE)
+**Dual-licensed under AGPL-3.0 and Commercial licenses.**
+
+| Use Case | License | Requirements |
+|----------|---------|--------------|
+| Open source projects | AGPL-3.0 | Release derivatives under AGPL-3.0 |
+| Personal/educational | AGPL-3.0 | Attribution required |
+| SaaS/proprietary | Commercial | [Contact for license](mailto:joseph@josephibrahim.com) |
+
+See [COMMERCIAL_LICENSE.md](COMMERCIAL_LICENSE.md) for commercial terms.
+
+**Why dual-license?** Batch-invariant inference and deterministic routing are novel contributions. AGPL ensures community improvements flow back while commercial licensing enables proprietary use.
+
+## Author
+
+Joseph Ibrahim - VFX Lighting TD
+- Portfolio: [josephibrahim.com](https://josephibrahim.com)
+- Commercial inquiries: joseph@josephibrahim.com
 
 ---
 
